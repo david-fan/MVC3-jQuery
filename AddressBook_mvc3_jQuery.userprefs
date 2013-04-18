@@ -1,22 +1,13 @@
-﻿<Properties>
+﻿<Properties GitUserInfo="UsingGIT">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Views/Note/Index.cshtml">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Views/Address/Index.cshtml">
     <Files>
-      <File FileName="Controllers/AddressController.cs" Line="8" Column="36" />
-      <File FileName="Views/Address/Index.cshtml" Line="248" Column="8" />
-      <File FileName="Controllers/PersonController.cs" Line="16" Column="9" />
-      <File FileName="Global.asax.cs" Line="1" Column="1" />
-      <File FileName="Views/Address/AddressList.cshtml" Line="20" Column="24" />
-      <File FileName="Models/Paginginfo.cs" Line="1" Column="1" />
-      <File FileName="Models/Note.cs" Line="1" Column="1" />
-      <File FileName="Models/Country.cs" Line="1" Column="1" />
-      <File FileName="Views/Note/Index.cshtml" Line="104" Column="40" />
+      <File FileName="Controllers/AddressController.cs" Line="1" Column="1" />
+      <File FileName="Views/Address/Index.cshtml" Line="30" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/david/Downloads/MVC3JsonDemo/Views/Address/Index.cshtml" line="248" column="1" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

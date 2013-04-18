@@ -11,9 +11,13 @@ namespace AddressBook_mvc3_jQuery
 {
 	public class MonoDBDriver
 	{
-		public MonoDBDriver ()
+		public static Boolean added;
+		public static void init()
 		{
-			var connectionString = "mongodb://localhost";
+			if(added)
+				return;
+
+			var connectionString = "mongodb://127.0.0.1";
 			var client = new MongoClient(connectionString);
 			var server = client.GetServer();
 			var database = server.GetDatabase("test");
@@ -32,8 +36,8 @@ namespace AddressBook_mvc3_jQuery
 			var update = Update<Entity>.Set(e => e.Name, "Harry");
 			collection.Update(query, update);
 			
-			collection.Remove(query);
-		}
+			//collection.Remove(query);
+			added=true;
 	}
 
 	public class Entity
@@ -42,5 +46,6 @@ namespace AddressBook_mvc3_jQuery
 		public string Name { get; set; }
 	}
 
+}
 }
 

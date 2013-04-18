@@ -11,6 +11,7 @@ namespace AddressBook_mvc3_jQuery.Controllers
         
         public ActionResult Index()
         {
+			MonoDBDriver.init();
             ViewBag.Message = "Welcome to ASP.NET MVC!";
 
             return View();
