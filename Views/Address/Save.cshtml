@@ -1,0 +1,197 @@
+﻿@model AddressBook_mvc3_jQuery.Models.Address
+@{ViewBag.Title = "Address"; }
+
+@using (Ajax.BeginForm("Save", "Address", new AjaxOptions
+                            {
+                                InsertionMode = InsertionMode.Replace,
+                                HttpMethod = "POST",
+                                OnSuccess = "saveSuccess"
+                            }, new { @id = "saveForm" }))
+{
+    @Html.ValidationSummary(true)
+    <input style="visibility:hidden" type="text" name="TBPersonNo" id="idTBPersonNo" value="@Model.PersonNo"/>
+    <input style="visibility:hidden" type="text" name="TBAddressNo" id="idTBAddressNo" value="@Model.AddressNo"/>
+    
+    <br />        
+    <fieldset>       
+        <table>        
+        <tr>
+        <td>Address Type</td>
+        <td>        
+          <select name="CBAddressType" id="idCBAddressType" style="width:120px">            
+          </select>
+        </td>
+        </tr>
+        <tr>
+        <td>Country</td>
+        <td>            
+            <select name="CBcountry" id="idCBcountry" style="width:120px">            
+            </select>
+        </td>
+        </tr>
+        <tr>
+        <td>City</td>
+        <td>            
+            <select name="CBcity" id="idCBcity" style="width:120px">            
+            </select>
+        </td>
+        </tr>
+        <tr>
+        <td>AddressText</td>
+        <td>        
+        <textarea rows="4" cols="25" name="TBAddressText" id="idTBAddressText">@Model.AddressText</textarea>            
+        </td>
+        </tr>
+        </table>        
+    </fieldset>
+}
+
+
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {  
+                                            
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("GetAddressTypeList", "Address")",
+                    data: {},
+                    cache: false,
+                    dataType: "json",
+                    success: function (data) 
+                    {                               
+                         var idCBAddressType = $("#idCBAddressType");
+                         idCBAddressType.html("");
+                                                                                                   
+                         for (var i = 0; i < data.List.length; i++) 
+                         {                                                                                                               
+                            var item = data.List[i];                        
+
+                            if (item.AddressTypeNo == @Model.AddressTypeNo)
+                            {                                                                
+                                idCBAddressType.append($("<option selected></option>").val(item.AddressTypeNo).text(item.AddressTypeName));
+                            }
+                            else
+                            {                                                            
+                                idCBAddressType.append($("<option />").val(item.AddressTypeNo).text(item.AddressTypeName));                                
+                            }  
+                         } 
+                          
+                         
+                    },  
+                    error: function(exp)        
+                    {
+                         alert('Error : ' + exp.responseText);
+                    }
+                });
+                        
+                        
+                //-----------------------------------------------------
+                
+               $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("GetCountryList", "Address")",
+                    data: {},
+                    cache: false,
+                    dataType: "json",
+                    success: function (data) 
+                    {                               
+                         var idCBcountry = $("#idCBcountry");
+                         idCBcountry.html("");
+                                
+                          if (@Model.AddressNo>0)
+                          {
+                                 for (var i = 0; i < data.List.length; i++) 
+                                 {                                                                                                               
+                                        var item = data.List[i];                        
+
+                                        if (item.CountryNo == @Model.CountryNo)
+                                        {                                
+                                            idCBcountry.append($("<option selected></option>").val(item.CountryNo).text(item.CountryName));
+                                            fillCity(item.CountryNo);
+                                        }
+                                        else
+                                        {
+                                            idCBcountry.append($("<option />").val(item.CountryNo).text(item.CountryName));
+                                        }
+                                                                        
+                                 }  //for   
+                          }      
+                          else
+                          {
+                                for (var i = 0; i < data.List.length; i++) 
+                                 {                                                                                                               
+                                    var item = data.List[i];                                                           
+                                    if (i==0)
+                                    {
+                                        idCBcountry.append($("<option selected></option>").val(item.CountryNo).text(item.CountryName));
+                                        fillCity(item.CountryNo);
+                                    }
+                                    else
+                                    {
+                                        idCBcountry.append($("<option />").val(item.CountryNo).text(item.CountryName));
+                                    }
+                                 }  //for                                   
+                          }//else                                                                                                                                                                                                                              			                  
+                    },  
+                    error: function(exp)        
+                    {
+                         alert('ErrorCountry : ' + exp.responseText);
+                    }
+                });
+
+                //-----------------------------------------------------                        
+                           
+
+                $("#idCBcountry").change(function () {
+                    var $this = $(this);
+                    var CountryNo = $this.val();
+                    if (CountryNo) 
+                    {
+                        fillCity(CountryNo);
+
+                    }//if
+                });
+
+
+    });//end of function
+
+
+    function fillCity(parCountryNo)
+    {
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("GetCityList", "Address")",
+                    data: {CountryNo: parCountryNo},
+                    cache: false,
+                    dataType: "json",
+                    success: function (data) 
+                    {                               
+                         var idCBcity = $("#idCBcity");
+                         idCBcity.html("");
+                                                                                                   
+                         for (var i = 0; i < data.List.length; i++) 
+                         {                                                                                                               
+                            var item = data.List[i];                        
+
+                            if (item.CityNo == @Model.CityNo)
+                            {                                
+                                idCBcity.append($("<option selected></option>").val(item.CityNo).text(item.CityName));
+                            }
+                            else
+                            {                                
+                                idCBcity.append($("<option />").val(item.CityNo).text(item.CityName));
+                            }
+                         }                        			                  
+                    },  
+                    error: function(exp)        
+                    {
+                         alert('ErrorCity : ' + exp.responseText);
+                    }
+                });        
+    }//fillCity
+
+</script>

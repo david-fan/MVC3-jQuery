@@ -1,0 +1,43 @@
+﻿@model AddressBook_mvc3_jQuery.Models.Note
+
+@using (Ajax.BeginForm("Save", "Note", new AjaxOptions
+                            {
+                                InsertionMode = InsertionMode.Replace,
+                                HttpMethod = "POST",
+                                OnSuccess = "saveSuccess"
+                            },
+                            new { @id = "saveForm" }
+                        )
+       )
+{
+
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>Note</legend>
+
+        <div class="editor-label"> 
+            @Html.HiddenFor(model => model.NoteNo)
+        </div>
+        <div class="editor-field">
+            @Html.HiddenFor(model => model.NoteNo)
+            @Html.ValidationMessageFor(model => model.NoteNo)
+        </div>
+
+        <div class="editor-label">
+            @Html.HiddenFor(model => model.PersonNo)
+        </div>
+        <div class="editor-field">
+            @Html.HiddenFor(model => model.PersonNo)
+            @Html.ValidationMessageFor(model => model.PersonNo)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.NoteText)
+        </div>
+        <div class="editor-field">
+            @Html.TextAreaFor(model => model.NoteText)
+            @Html.ValidationMessageFor(model => model.NoteText)
+        </div>
+      
+    </fieldset>
+}

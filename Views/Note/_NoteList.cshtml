@@ -1,0 +1,30 @@
+﻿
+@model IEnumerable<AddressBook_mvc3_jQuery.Models.Note>
+
+
+@foreach (var item in Model)
+{
+    
+ <tr id="row-@item.NoteNo">
+        <td>
+
+         <span id="cboxSpan"><input type="checkbox" name="cboxDEL" pkno="@item.NoteNo" id="cboxDEL-@item.NoteNo" class="cboxDELclass" value="" /></span>
+
+     <span>@Html.ActionLink("Edit", "Save", new { noteNo = item.NoteNo, personNo = item.PersonNo }, new { @class = "editLink" }) </span>
+     <span>@Html.ActionLink("Delete", "DeleteNote", new { noteNo = item.NoteNo }, new { @class = "deleteLink", @pkNo = item.NoteNo }) </span>
+
+
+    <span class="noteNo">
+        @item.NoteNo
+    </span>
+
+
+    <span>
+        @item.NoteText
+    </span>
+   
+
+       </td>
+ </tr>
+    
+}

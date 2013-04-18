@@ -1,0 +1,24 @@
+﻿
+
+@model AddressBook_mvc3_jQuery.Models.Note
+
+
+ <tr id="row-@Model.NoteNo">
+    <td>
+
+    
+    <span id="cboxSpan"><input type="checkbox" name="cboxDEL" pkno="@Model.NoteNo" id="cboxDEL-@Model.NoteNo"  class="cboxDELclass" value="" /></span>
+
+     <span>@Html.ActionLink("Edit", "Save", new { noteNo = Model.NoteNo, personNo = Model.PersonNo }, new { @class = "editLink" }) </span>
+     <span>@Html.ActionLink("Delete", "Delete", new { noteNo = Model.NoteNo }, new { @class = "deleteLink", @pkNo = Model.NoteNo }) </span>
+
+    <span class="noteNo">
+        @Model.NoteNo
+    </span>
+
+    <span>
+        @Model.NoteText
+    </span>
+
+    </td>
+ </tr>

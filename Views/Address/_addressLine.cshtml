@@ -1,0 +1,25 @@
+﻿
+
+@model AddressBook_mvc3_jQuery.Models.Address
+
+   <tr id="row-@Model.AddressNo">
+        <td>            
+            @Html.ActionLink("Edit", "Save", new { addressNo = Model.AddressNo, personNo = Model.PersonNo }, new { @class = "editLink" })                         
+            @Html.ActionLink("Delete", "Delete", new { addressNo = Model.AddressNo }, new { @class = "deleteLink", @pkNo = Model.AddressNo })
+        </td>
+        <td>            
+            <span class="AddressNo">@Model.AddressNo</span>
+        </td>      
+        <td>            
+            <span class="AddressTypeName">@Model.AddressTypeName</span>
+        </td>
+        <td>            
+            <span class="CityName">@Model.CityName/@Model.CountryName</span>
+        </td>
+        <td>            
+            <span class="AddressText">@Model.AddressText</span>
+        </td>       
+    </tr>
+
+
+

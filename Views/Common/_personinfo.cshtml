@@ -1,0 +1,17 @@
+﻿@model AddressBook_mvc3_jQuery.Models.Person
+
+@{
+    ViewBag.Title = "_personinfo";
+}
+           
+<fieldset>
+    <legend>Person info</legend>
+
+    <table>
+        <tr><td><b><span> @Model.FirstName @Model.LastName </span></b>(@String.Format("{0:dd.MM.yyyy}", Model.BirthDate))</td><td>(@Model.CategoryName)</td></tr>        
+         
+    </table>
+
+</fieldset>
+
+

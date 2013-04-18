@@ -1,0 +1,369 @@
+﻿@model AddressBook_mvc3_jQuery.Models.Paginginfo
+
+<h2>NoteList</h2>
+<div> 
+    @Html.Action("_personinfo", "Common") 
+</div> 
+
+
+<p>    
+    @Html.ActionLink("New", "Save", "Note", new { NoteNo = 0, personNo = @Model.id }, new { @class = "newLink" }) | <a href="#" class="deleteCheck" id="deleteALL">Delete Selected</a> |
+</p>
+
+<div id="Message"></div>
+
+<div id="paginginfo" style="visibility:hidden">       
+    <span class="pagingPersonNo">@Model.id</span>
+</div>
+
+<br />
+
+<table id="NoteTable"></table>
+
+<br />
+<a href="#"  style="display:none"  id="more">more</a>
+
+<div id="saveDialog" title="Notes Information"></div>
+<div id="confirmDialog" title="Warning"></div>
+
+
+<script type="text/javascript">
+
+    var linkObj;
+    
+    $(document).ready(function () 
+    {
+        buttonizeALL();
+
+        $('#saveDialog').dialog({
+            autoOpen: false,
+            width: 450,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "Save": function () {
+                    $("#update-message").html(''); 
+                    $("#saveForm").submit();
+                },
+                "Cancel": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        setLinkAbilites();
+        initializePage();                
+
+    });
+
+    function buttonizeALL() 
+    {
+        $(".editLink").button();
+        $(".newLink").button();
+        $(".deleteLink").button();
+    }
+
+    function setLinkAbilites()     
+    {
+        $(".editLink, .newLink").unbind('click');
+                
+        $(".editLink, .newLink").click
+        (
+            function () 
+            {                   
+                linkObj = $(this);
+                var dialogDiv = $('#saveDialog');
+                var viewUrl = linkObj.attr('href');
+                $.get(viewUrl, function (data)
+                {
+                    dialogDiv.html(data);
+                    
+                    var $form = $("#saveForm");
+                    $form.unbind();
+                    $form.data("validator", null);
+                    $.validator.unobtrusive.parse(document);
+                    $form.validate($form.data("unobtrusiveValidation").options);                    
+
+                    dialogDiv.dialog('open');
+                   
+                });
+
+                return false;
+            }
+        );
+
+
+
+        //delete record
+        $(".deleteLink").live("click", function (e) 
+        {
+            e.preventDefault();
+
+            var pkNo = $(this).attr("pkNo");
+            
+            $("#confirmDialog").html('<br/><br/>sure?');
+
+            $("#confirmDialog").dialog({
+                resizable: false,
+                height: 200,
+                width: 300,
+                modal: true,
+                buttons: 
+                {
+                    "Yes": function () 
+                    {
+                        $(this).dialog("close");
+                        
+                        var rowNo = '#row-' + pkNo;
+                                                
+                        $.ajax({
+                            type: "POST",
+                            url: "/Note/DeleteNote",                         
+                            data: { noteNo: pkNo },
+                            cache: false,
+                            dataType: "json",
+                            success: function () 
+                            {                            
+                                  $(rowNo).remove();                                                        
+                            },                          
+                            error: function(jqXHR, exception) 
+                            {
+                                   alert('Uncaught Error.\n' + jqXHR.responseText);                                    
+                            }
+
+                        }); //end ajax call
+
+                    }, // end of yes button
+                    "No": function () 
+                    {
+                        $(this).dialog("close");
+                    }
+                } //end buttons
+            }); //end modal 
+        });    //end delete
+
+
+
+
+
+         //delete ALL selected records
+        $("#deleteALL").live("click", function (e) 
+        {
+            e.preventDefault();
+            
+            var len = $("#NoteTable tr").length;                      
+            
+            $("#confirmDialog").html('<br/><br/>deleting all selecteds.. sure?');
+
+            $("#confirmDialog").dialog({
+                resizable: false,
+                height: 200,
+                width: 300,
+                modal: true,
+                buttons: 
+                {
+                    "Yes": function () 
+                    {
+                        $(this).dialog("close");
+                        
+                            var strSelecteds = '';                            
+                            var rows = $("#NoteTable tr");
+                                                       
+
+                            for(var i=0; i< rows.length; i++)
+                            {                               
+                                var row = $(rows).eq(i);
+                                                                                                                               
+                                var span = row.find('span#cboxSpan');
+                                var cb = row.find('span#cboxSpan').find('input.cboxDELclass');
+                                
+                                var checked = (cb.is(':checked'));
+                                
+                                var pkno =  cb.attr("pkno"); 
+
+                                if (checked)
+                                {
+                                    strSelecteds = strSelecteds + pkno + ',';
+                                }
+                                                                
+                            }//
+                            
+
+
+                            if (strSelecteds.length>0)
+                            {
+                                strSelecteds = strSelecteds.substring(0,strSelecteds.length-1);
+                            }
+                            
+
+                            if (strSelecteds.length>0)
+                            {                                                                                
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Note/DeleteALL",                         
+                                    data: { noteNOs: strSelecteds },
+                                    cache: false,
+                                    dataType: "json",
+                                    success: function (data) 
+                                    {                                                                     
+                                            var  strSelectedsArr = strSelecteds.split(',');                                            
+                                            for (var i = 0; i < strSelectedsArr.length; i++) 
+                                            {                                                
+                                                var rowNo = '#row-' + strSelectedsArr[i];
+                                                $(rowNo).remove();  
+                                                //alert(strSelectedsArr[i]);
+
+                                            }//for
+                                            
+
+                                            $('#saveDialog').dialog('close');
+                                            $('#Message').html(data.Message);
+                                            $('#Message').delay(300).slideDown(300).delay(1000).slideUp(300);
+                                                                                      
+                                                                                         
+                                    },                          
+                                    error: function(jqXHR, exception) 
+                                    {
+                                           alert('Uncaught Error.\n' + jqXHR.responseText);                                    
+                                    }
+
+                                }); //end ajax call
+                            }
+                            else
+                                alert('No row selected');
+
+                    }, // end of yes button
+                    "No": function () 
+                    {
+                        $(this).dialog("close");
+                    }
+                } //end buttons
+            }); //end modal 
+
+        });    //end deleteALL
+   
+
+    } //end setLinkAbilites
+
+
+
+
+
+
+
+    function initializePage()
+    {
+       var PersonNo = $("#paginginfo .pagingPersonNo").text();                    
+       $("#NoteTable").html('');
+       fillData(PersonNo, 0); 
+    }
+
+   
+    function fillData(parPersonNo, parLastNoteNo) 
+    {                 
+        if (parPersonNo) 
+        {
+            $.ajax({
+                type: "POST",                
+                url: "@Url.Action("GetNoteList", "Note")",
+                data: { personNo: parPersonNo,  lastNoteNo: parLastNoteNo} ,
+                cache: false,
+                dataType: "json",
+                success: function (data) 
+                {                                                                                          
+                    if (data.Html) 
+                    {                                              
+                        $("#NoteTable").append(data.Html);
+                        
+                        buttonizeALL();
+                        setLinkAbilites();
+                        
+                        if (data.HasMore)                        
+                            $("#more").show();                                                   
+                        else                        
+                            $("#more").hide();                                                
+                    }
+                    else 
+                    {
+                        alert('opps!'); 
+                    }
+                },                
+                error: function(exp)        
+                {
+                        alert('Error address : ' + exp.responseText);
+                }                
+            }); //end ajax call
+        } // if 
+    }//func
+
+
+    //load more results
+    $(function () 
+    {
+        $("#more").click(function (e) 
+        {
+            e.preventDefault();
+                       
+            var lastNoteNo = $("#NoteTable tr:last .noteNo").text();
+                                    
+            if (lastNoteNo) 
+            {
+                var PersonNo = $("#paginginfo .pagingPersonNo").text();              
+                fillData(PersonNo, lastNoteNo);                                              
+            }                             
+
+            //--- scroll to bottom of page ---
+            var $target = $('html,body'); 
+            $target.animate({scrollTop: $target.height()}, "slow");
+            //--- /scroll to bottom of page ---
+
+            return false;
+        });
+    });
+
+    function saveSuccess(data) 
+    {
+        if (data.Success == true) 
+        {
+            
+            $("#paginginfo").show();       
+
+            if (data.operationType == 'UPDATE') 
+            {                           
+                var row = linkObj.closest("tr");
+                row.replaceWith(data.Html);     
+                               
+                buttonizeALL();
+                setLinkAbilites();  
+            }
+            else {  //INSERT
+
+                try 
+                {                  
+                      if ( $("#NoteTable tr").length > 0 )
+                        $("#NoteTable tr:first").before(data.Html);
+                      else
+                        $("#NoteTable").html(data.Html);
+
+                      buttonizeALL();
+                      setLinkAbilites() ;  
+
+                }
+                catch (err) 
+                {
+                       alert(err.Message);
+                }
+            }
+
+            $('#saveDialog').dialog('close');
+            $('#Message').html(data.Message);
+            $('#Message').delay(300).slideDown(300).delay(1000).slideUp(300);
+        }
+        else 
+        {
+            $("#update-message").html(data.ErrorMessage);
+            $("#update-message").show();
+        }
+    }
+    
+</script>

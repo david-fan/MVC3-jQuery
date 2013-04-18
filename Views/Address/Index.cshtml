@@ -1,0 +1,380 @@
+﻿
+@model AddressBook_mvc3_jQuery.Models.Paginginfo
+
+
+
+<h2>Address List</h2>
+<div> 
+    @Html.Action("_personinfo", "Common") 
+</div> 
+
+
+<p>    
+    @Html.ActionLink("New", "Save", "Address", new { addressNo = 0, personNo = @Model.id }, new { @class = "newLink" })
+</p>
+
+<div id="Message"></div>
+
+<div id="paginginfo">
+<hr />
+    <select id="PageSelect"></select>
+    
+    <span class="pagingPersonNo" style="visibility:hidden">@Model.id</span>
+    <span class="pagingTotalCount" style="visibility:hidden">@Model.TotalCount</span>
+    <span class="pagingPageSize" style="visibility:hidden">@Model.PageSize</span>
+
+    <span class="pagingSummary">aaa</span>
+
+<hr/>
+</div>
+
+<div id="content"></div>
+
+
+<div id="saveDialog" title="Address Information"></div>
+<div id="confirmDialog" title="Warning"></div>
+
+
+<script type="text/javascript">
+
+    var linkObj;
+
+    //  $(function () {
+    $(document).ready(function () {
+
+        buttonizeALL();
+
+        $('#saveDialog').dialog({
+            autoOpen: false,
+            width: 450,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "Save": function () {
+                    $("#update-message").html(''); 
+                    $("#saveForm").submit();
+                },
+                "Cancel": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        setLinkAbilites();
+
+        initializePaging();
+        
+
+    });
+
+    function buttonizeALL() 
+    {
+
+        $(".editLink").button();
+        $(".newLink").button();
+        $(".deleteLink").button();
+    }
+
+
+    function setLinkAbilites()     
+    {
+        $(".editLink, .newLink").unbind('click');
+                        
+        $(".editLink, .newLink").click
+        (
+            function () 
+            {                   
+                linkObj = $(this);
+                var dialogDiv = $('#saveDialog');
+                var viewUrl = linkObj.attr('href');
+                $.get(viewUrl, function (data) 
+                {
+                    dialogDiv.html(data);
+                    
+                    //---- validation ----
+                    var $form = $("#saveForm");
+                    $form.unbind();
+                    $form.data("validator", null);
+                    $.validator.unobtrusive.parse(document);
+                    $form.validate($form.data("unobtrusiveValidation").options);                    
+                    //---- /validation ----
+
+                    dialogDiv.dialog('open');
+                   
+                });
+
+                return false;
+            }
+        );
+
+
+
+        //delete record
+        $(".deleteLink").live("click", function (e) {
+            e.preventDefault();
+
+            var pkNo = $(this).attr("pkNo");
+            
+
+            $("#confirmDialog").html('<br/><br/>sure?');
+
+            $("#confirmDialog").dialog({
+                resizable: false,
+                height: 200,
+                width: 300,
+                modal: true,
+                buttons: 
+                {
+                    "Yes": function () 
+                    {
+                        $(this).dialog("close");
+                        
+                        var rowNo = '#row-' + pkNo;
+                                                                        
+                        $.ajax({
+                            type: "POST",
+                            url: "/Address/DeleteAddress",
+                            
+                            data: { addressNo: pkNo },
+                            cache: false,
+                            dataType: "json",
+                            success: function () {
+                            
+                                  $(rowNo).remove();
+
+                                  //----------- change paging info -------------
+                   
+                                   var TotalCount = $("#paginginfo .pagingTotalCount").text();  
+                                   TotalCount = parseInt(TotalCount) - 1;
+                                   $("#paginginfo .pagingTotalCount").text(TotalCount);
+
+                                   
+                                   if (TotalCount>0)            
+                                   {
+                                           $("#paginginfo").show();       
+                                                   
+
+                                           var PageSize = $("#paginginfo .pagingPageSize").text();              
+                                           var PersonNo = $("#paginginfo .pagingPersonNo").text();              
+                                           var pageNo = $("#PageSelect").val();
+
+                                                                                                                            
+                                           if ((TotalCount % PageSize )==0) //remove last item of combo
+                                           {                                        
+                                                var lastVal = $('#PageSelect option:last-child').val();
+                                                var selectedVal = $("#PageSelect option:selected").val();
+
+                                                $('#PageSelect option:last-child').remove();            
+
+
+                                                if (lastVal==selectedVal)
+                                                {
+                                                    $("#PageSelect").val( lastVal-1 ).attr('selected',true);                                                                                                                 
+                                                }                                        
+                                                                                                                            
+                                                pageNo = $("#PageSelect").val();
+                                                fillData(PersonNo, pageNo);                                                                               
+                                           }                                                                              
+                                   }
+                                   else
+                                   {
+                                        $("#PageSelect").html('');
+                                        $("#paginginfo").hide();       
+                                   }
+                                   
+                                   setPagingSummary(pageNo);
+
+                                   //----------- /change paging info -------------                               
+                            },
+                          
+                            error: function(jqXHR, exception) 
+                                {
+                                        alert('Uncaught Error.\n' + jqXHR.responseText);                                    
+                                }
+
+                        }); //end ajax call
+                    }, // end of yes button
+                    "No": function () {
+                        $(this).dialog("close");
+                    }
+                } //end buttons
+            }); //end modal 
+        });    //end delete
+
+    } //end setLinkAbilites
+
+
+    function initializePaging()
+    {
+       var PersonNo = $("#paginginfo .pagingPersonNo").text();              
+       var TotalCount = $("#paginginfo .pagingTotalCount").text();              
+       var PageSize = $("#paginginfo .pagingPageSize").text();              
+       
+       var PageSelect = $("#PageSelect");
+
+       if (TotalCount==0)
+       {
+            PageSelect.html("");            
+            $("#paginginfo").hide();                                                 
+       }
+       else
+       {
+             PageSelect.html("");
+
+             var num = Math.ceil(TotalCount/PageSize);
+
+             for (var i = 1; i <= num; i++) 
+             {             
+                    if (i==1)
+                        PageSelect.append($("<option selected></option>").val(i).text(i));
+                    else
+                        PageSelect.append($("<option></option>").val(i).text(i));                                                                                   
+             }     
+
+             
+             
+
+      }
+        
+      fillData(PersonNo, 1); 
+
+    }
+
+   
+
+    $("#PageSelect").change(function () 
+    {
+
+        var $this = $(this);
+        var parPageNo = $this.val();
+        var parPersonNo = $("#paginginfo .pagingPersonNo").text();              
+
+        fillData(parPersonNo,parPageNo);
+                      
+    });//PageSelect
+
+
+    function setPagingSummary(pageNo)
+    {
+        var parTotal = $("#paginginfo .pagingTotalCount").text();              
+        var parPageSize = $("#paginginfo .pagingPageSize").text();              
+        
+        var intervalStart = (pageNo-1)*parPageSize+1;
+
+        var rowCnt =    $('#AddressTable tr').length;
+       
+        var intervalEnd = intervalStart + rowCnt - 2; //pageNo*parPageSize;
+
+        var sum = '<b>[ ' + intervalStart + ' - ' +  intervalEnd + ' ] </b> of ' + parTotal;
+
+        $("#paginginfo .pagingSummary").html(sum);
+        
+
+    }
+
+
+    function fillData(parPersonNo, parPageNo) 
+    { 
+        
+        if (parPageNo) 
+        {
+            $.ajax({
+                type: "POST",                
+                url: "@Url.Action("GetAddressList", "Address")",
+                data: { personNo: parPersonNo, pageNo: parPageNo },
+                cache: false,
+                dataType: "json",
+                success: function (data) 
+                {                                  
+                    if (data.Html) 
+                    {                       
+                        $("#content").html(data.Html);
+                        
+                        buttonizeALL();
+                        setLinkAbilites();
+                        
+                        setPagingSummary(parPageNo);
+                    }
+                    else 
+                    {
+                        alert('opps!'); 
+                    }
+                },                
+                error: function(exp)        
+                {
+                         alert('Error address : ' + exp.responseText);
+                }                
+            }); //end ajax call
+        } // if (parPageNo) 
+
+    }//func
+
+
+
+    function saveSuccess(data) 
+    {
+        if (data.Success == true) 
+        {            
+            $("#paginginfo").show();       
+
+            if (data.operationType == 'UPDATE') 
+            {                           
+                var row = linkObj.closest("tr");
+                
+                // the following line can also be used  to get related row
+                //$('#AddressTable #row-' + data.Object.AddressNo); 
+                                                                                          
+                row.replaceWith(data.Html);     
+                               
+                buttonizeALL();
+                setLinkAbilites();
+            }
+            else 
+            {  //INSERT
+
+                try 
+                {                                
+                      $("#AddressTable tr:first").after(data.Html);
+                                                                                          
+                      //----------- change paging info -------------
+                   
+                       var TotalCount = $("#paginginfo .pagingTotalCount").text();              
+                       var PageSize = $("#paginginfo .pagingPageSize").text();              
+                                      
+                       TotalCount = parseInt(TotalCount) + 1;
+                       $("#paginginfo .pagingTotalCount").text(TotalCount);
+                                      
+                       if ((TotalCount % PageSize )==1)
+                       {
+                            var lastVal = Math.ceil(TotalCount / PageSize);
+                            $("#PageSelect").append($("<option></option>").val(lastVal).text(lastVal));
+                       }
+
+                       var pageNo = $("#PageSelect").val();
+                       setPagingSummary(pageNo);
+
+                      //----------- /change paging info -------------
+
+                      buttonizeALL();
+                      setLinkAbilites();     
+
+                }
+                catch (err) 
+                {
+                       alert(err.Message);
+                }
+            }
+            
+            $('#saveDialog').dialog('close');            
+            $('#Message').html(data.Message);            
+            $('#Message').delay(300).slideDown(300).delay(1000).slideUp(300);
+
+        }
+        else 
+        {
+            $("#update-message").html(data.ErrorMessage);
+            $("#update-message").show();
+        }
+    }
+    
+</script>

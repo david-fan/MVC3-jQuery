@@ -1,0 +1,82 @@
+﻿@model AddressBook_mvc3_jQuery.Models.Person
+            
+@{  ViewBag.Title = "Save Person"; }
+
+<script language="javascript" type="text/javascript">
+
+         $(document).ready(function () {
+            $(".BirthDateSave").datepicker({  
+                     changeMonth: true,
+                     changeYear: true,  
+                     dateFormat: 'dd.mm.yy',
+                     showOn: 'both'
+                           });  
+                        });
+
+</script>
+
+
+@using (Ajax.BeginForm("Save", "Person", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "POST",
+    OnSuccess = "saveSuccess"    
+}, new { @id = "savePersonForm" }))
+{
+    @Html.ValidationSummary(true)    
+    
+    <div id="update-message" class="error invisible"></div>
+    
+    <fieldset>
+        <legend>Person</legend>
+
+        <div class="editor-label">
+            @Html.HiddenFor(model => model.PersonNo)            
+        </div>
+        <div class="editor-field" >
+            @Html.HiddenFor(model => model.PersonNo)
+            @Html.ValidationMessageFor(model => model.PersonNo)
+        </div>
+
+
+        <div class="editor-label">
+            Category
+        </div>
+        <div class="editor-field" >        
+                            @Html.DropDownListFor(
+                            model => model.CategoryNo,
+                            new SelectList(@Model.CategoryList, "CategoryNo", "CategoryName"))
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.FirstName)
+        </div>
+        <div class="editor-field">            
+            @Html.EditorFor(model => model.FirstName)
+            @Html.ValidationMessageFor(model => model.FirstName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.LastName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.LastName)
+            @Html.ValidationMessageFor(model => model.LastName)
+        </div>
+
+          <div class="editor-label">
+            @Html.LabelFor(model => model.BirthDate)
+        </div>
+        <div class="editor-field">         
+            @Html.TextBoxFor(model => model.BirthDate, 
+                    new { @class = "BirthDateSave", 
+                          @id = "TBBirthDate",
+                          @Value = Model.BirthDate.ToString("dd.MM.yyyy") 
+                        })
+        </div>
+
+    </fieldset>
+        
+}
+
+

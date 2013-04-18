@@ -1,0 +1,404 @@
+﻿@model IEnumerable<AddressBook_mvc3_jQuery.Models.Person>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>    
+    @Html.ActionLink("New", "Save", new { personNo = 0 }, new { @class = "newLink" })
+</p>
+
+<div id="Message"></div>
+
+<table id="personTable">
+    <tr>
+        <th></th>
+        <th>
+            #
+        </th>
+        <th>
+            Category
+        </th>
+        <th>
+            FirstName
+        </th>
+        <th>
+            SecondName
+        </th>
+        <th>
+            BirthDate
+        </th>
+        <th>
+            image
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr id="row-@item.PersonNo">
+        <td>                       
+            @Html.ActionLink("Edit", "Save", new { personNo = item.PersonNo }, new { @class = "editLink" })             
+            @Html.ActionLink("Addresses", "Index", "Address", new { personNo = item.PersonNo }, new { @class = "adressLink" }) 
+            @Html.ActionLink("Notes", "Index", "Note", new { personNo = item.PersonNo }, new { @class = "noteLink" }) 
+            @Html.ActionLink("Delete", "DeletePerson", new { personNo = item.PersonNo }, new { @class = "deleteLink", @pkNo = item.PersonNo })
+        </td>
+
+        <td>            
+            <span class="PersonNo">@item.PersonNo</span>
+        </td>
+        <td>
+            <span class="CategoryName">@item.CategoryName</span>
+        </td>
+        <td>
+            <span class="FirstName">@item.FirstName</span>             
+        </td>
+        <td>
+            <span class="LastName">@item.LastName</span>
+        </td>
+        <td>            
+            <span class="BirthDate"> @String.Format("{0:dd.MM.yyyy}", item.BirthDate) </span>           
+        </td>
+        <td>
+            <img  id="img-@item.PersonNo" height="35px" width="50px"  alt="@item.ImgFileName " src="/content/images/@item.ImgFileName" />
+            <br />
+            @Html.ActionLink("Upload Pic", "SavePersonPic", new { personNo = item.PersonNo }, new { @class = "uploadPicLink", @pkNo = item.PersonNo, style = "font-size:9px;" })
+        </td>
+    </tr>
+}
+
+</table>
+
+<div id="saveDialog" title="Person Information"></div>
+
+<div id="savePicDialog" title="Person image"></div>
+
+<div id="confirmDialog" title="Warning"></div>
+
+
+
+<script type="text/javascript">
+
+    var linkObj;
+    var isFirstLoad;
+
+    $(document).ready(function () {
+
+        isFirstLoad = true;
+
+        buttonizeALL();
+
+        $('#saveDialog').dialog({
+            autoOpen: false,
+            width: 400,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "Save": function () {
+                    $("#update-message").html('');
+                    $("#savePersonForm").submit();
+                },
+                "Cancel": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+
+        $('#savePicDialog').dialog({
+            autoOpen: false,
+            width: 400,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "Save": function () {
+                    
+                    $("#update-message").html('');
+                    $("#savePersonPicForm").submit();
+                   
+                    
+                },
+                "Cancel": function () {
+                   
+                    $(this).dialog("close");
+                    
+                }
+            }
+        });
+
+        setLinks();
+    });
+
+    function buttonizeALL() 
+    {        
+        $(".editLink").button();
+        $(".newLink").button();
+        $(".adressLink").button();
+        $(".noteLink").button();
+        $(".deleteLink").button();
+    }
+
+
+    function setLinks() 
+    {
+
+            $(".editLink, .newLink, uploadPicLink").unbind('click');
+
+            $(".editLink, .newLink").click
+            (
+                function () 
+                {
+                    linkObj = $(this);
+                    var dialogDiv = $('#saveDialog');
+                    var viewUrl = linkObj.attr('href');
+                    $.get(viewUrl, function (data) 
+                    {
+                        dialogDiv.html(data);
+                        //validation
+                        var $form = $("#savePersonForm");
+                        $form.unbind();
+                        $form.data("validator", null);
+                        $.validator.unobtrusive.parse(document);
+                        $form.validate($form.data("unobtrusiveValidation").options);
+
+                        dialogDiv.dialog('open');
+                    });
+
+                    return false;
+
+                }
+            );
+
+
+
+
+            $(".uploadPicLink").click
+            (
+                function () {
+
+                   // isFirstLoad = false;
+
+                    linkObj = $(this);
+
+                    var dialogDiv = $('#savePicDialog');
+                    var viewUrl = linkObj.attr('href');
+                    $.get(viewUrl, function (data) {
+                        dialogDiv.html(data);
+                        //validation
+                        var $form = $("#savePersonPicForm");
+                        $form.unbind();
+                        $form.data("validator", null);
+                        $.validator.unobtrusive.parse(document);
+                        $form.validate($form.data("unobtrusiveValidation").options);
+
+                        dialogDiv.dialog('open');
+                    });
+
+                    return false;
+
+                }
+            );
+
+
+
+
+            //delete person
+            $(".deleteLink").live("click", function (e) {
+                e.preventDefault();
+
+                var pkNo = $(this).attr("pkNo");
+                
+                $("#confirmDialog").html('<br/><br/>sure?');
+
+                $("#confirmDialog").dialog({
+                    resizable: false,
+                    height: 200,
+                    width: 300,
+                    modal: true,
+                    buttons: {
+                        "Yes": function () {
+                            $(this).dialog("close");                            
+                            var rowNo = '#row-' + pkNo;                            
+                            $.ajax({
+                                type: "POST",
+                                url: "/Person/DeletePerson",                                
+                                data: { personNo: pkNo },
+                                cache: false,
+                                dataType: "json",
+                                success: function () 
+                                {
+
+                                    $(rowNo).animate({ opacity: 0.0 }, 400, function () {
+                                        $(rowNo).remove();
+                                    });
+                                                                                                     
+                                },
+
+                                error: function (jqXHR, exception) 
+                                {
+                                        alert('Uncaught Error.\n' + jqXHR.responseText);                                    
+                                }
+                                
+                            }); //end ajax call
+
+                        }, // end of yes button
+                        "No": function () {
+                            $(this).dialog("close");
+                        }
+                    } //end buttons
+                }); //end modal 
+            });     //end delete
+
+
+    } //end setLinks
+
+
+
+    function saveSuccess(data) 
+    {
+        if (data.Success == true) 
+        {
+            if (data.operationType == 'UPDATE') 
+            {
+                //we update the table's row info
+                var parent = linkObj.closest("tr");
+                
+                $(parent).animate({ opacity: 0.3 }, 200, function () 
+                {;});
+
+                parent.find(".FirstName").html(data.Object.FirstName);
+                parent.find(".LastName").html(data.Object.LastName);
+                parent.find(".CategoryName").html(data.Object.CategoryName);
+
+                var date = new Date(parseInt(data.Object.BirthDate.substr(6)));
+                var dateStr = FormatDate(date);                                     
+                parent.find(".BirthDate").html(dateStr);
+
+
+                $(parent).animate({ opacity: 1.0 }, 200, function () {
+                    ;
+                });
+
+            }
+            else 
+            {  //INSERT
+
+                //we add the new row to table
+                //we do not refresh all records on screen
+                
+                try 
+                {                    
+                    var personTable = document.getElementById("personTable");
+                    var row = personTable.insertRow(1); //row 0 is header
+                    row.setAttribute("id", 'row-' + data.Object.PersonNo.toString());
+                                                                     
+                    var buttonsLinks =
+                    '<a role="button" class="editLink ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover ui-state-focus" href="/Person/Save/' + data.Object.PersonNo.toString() + '"><span class="ui-button-text">Edit</span></a> ' +
+                    '<a role="button" class="adressLink ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="/Address/Index/' + data.Object.PersonNo.toString()  + '"><span class="ui-button-text">Addresses</span></a> ' +
+                    '<a role="button" class="noteLink ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="/Note/Index/' + data.Object.PersonNo.toString() + '"><span class="ui-button-text">Notes</span></a> ' +
+                    '<a role="button" class="deleteLink ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" href="/Person/Delete/' + data.Object.PersonNo.toString() + '" pkno="' + data.Object.PersonNo.toString()  + '"><span class="ui-button-text">Delete</span></a>';
+
+            
+                    var cellButtons = row.insertCell(0);
+                    cellButtons.innerHTML = buttonsLinks;
+
+                    var cellPersonNo = row.insertCell(1);
+                    cellPersonNo.innerHTML = "<span  class=\"PersonNo\">" + data.Object.PersonNo + "</span>";
+
+
+                    var cellCategoryName = row.insertCell(2);
+                    cellCategoryName.innerHTML = "<span  class=\"CategoryName\">" + data.Object.CategoryName + "</span>";
+
+                    var cellFN = row.insertCell(3);
+                    cellFN.innerHTML = "<span  class=\"FirstName\">" + data.Object.FirstName + "</span>";
+                    
+                    var cellLN= row.insertCell(4);
+                    cellLN.innerHTML = "<span  class=\"LastName\">" + data.Object.LastName + "</span>";
+
+                    var cellBirthDate = row.insertCell(5);
+                    var date = new Date(parseInt(data.Object.BirthDate.substr(6)));
+                    var dateStr = FormatDate(date);
+                    cellBirthDate.innerHTML = "<span  class=\"BirthDate\">" + dateStr + "</span>";
+
+                    var cellimgFileName = row.insertCell(6);
+                    cellimgFileName.innerHTML =
+                        "<img id=\"img-" + data.Object.PersonNo.toString() + "\" alt=\"" + data.Object.ImgFileName + "\" src=\"/content/images/" + "noimg.jpg" + "\" height=\"35px\" width=\"50px\"><br><a class=\"uploadPicLink\" href=\"/Person/SavePersonPic/" + data.Object.PersonNo.toString() + "\" pkno=\"" + data.Object.PersonNo.toString() + "\" style=\"font-size:9px;\">Upload Pic</a>";
+
+                    
+                    setLinks();
+                                     
+                }
+                catch (err) {
+                    alert(err.Message);
+                }                               
+            }
+            
+            $('#saveDialog').dialog('close');
+            $('#Message').html(data.Message);
+            $('#Message').delay(300).slideDown(300).delay(1000).slideUp(300);
+
+        }
+        else {
+            $("#update-message").html(data.ErrorMessage);
+            $("#update-message").show();
+        }
+    }
+
+
+    function FormatDate(dt) {
+        var dateStr = '';
+        var day = dt.getDate().toString();
+        var mon = (dt.getMonth() + 1).toString();
+        var year = dt.getFullYear().toString();
+        
+        if (parseInt(day) <= 9) day = '0' + day;
+        if (parseInt(mon) <= 9) mon = '0' + mon;
+
+        dateStr = day + '.' + mon + '.' + year;
+        
+        return dateStr;
+    }
+
+  
+
+
+
+    function UploadImage_Complete() 
+    {            
+        //Check first load of the iFrame
+        if (isFirstLoad == true) 
+        {
+            isFirstLoad = false;
+            return;
+        }
+
+
+        try 
+        {            
+            //Reset the image form
+            document.getElementById("savePersonPicForm").reset();
+        
+            var jsonTxt = ($('#UploadTarget').contents()).text();            
+            var jsonObj = JSON.parse(jsonTxt);
+            
+            var rowid = '#row-' + jsonObj.PersonNo;            
+            var row = $('#personTable ' + rowid);           
+            var imgid = "#img-" + jsonObj.PersonNo;                       
+            var img = row.find(imgid);              
+            $(img).attr("src", jsonObj.ImagePath);
+
+           
+            $('#Message').html(jsonObj.Message);
+            $('#Message').delay(300).slideDown(300).delay(1000).slideUp(300)
+
+
+            $('#savePicDialog').dialog('close');
+        }
+        catch (err) 
+        {
+            alert(err.get_Message());
+        }
+    }
+  
+    
+</script>

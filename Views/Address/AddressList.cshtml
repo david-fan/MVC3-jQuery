@@ -1,0 +1,44 @@
+﻿@model IEnumerable<AddressBook_mvc3_jQuery.Models.Address>
+
+<table id="AddressTable">
+    <tr>
+        <th></th>
+        <th>
+            #
+        </th>       
+        <th>
+            AddressType
+        </th>
+        <th>
+            City/Country
+        </th>
+        <th>
+            Address Text
+        </th>        
+    </tr>
+
+@foreach (var item in Model) 
+{
+    <tr id="row-@item.AddressNo">
+        <td>            
+            @Html.ActionLink("Edit", "Save", new { addressNo = item.AddressNo, personNo = item.PersonNo }, new { @class = "editLink" })                         
+            @Html.ActionLink("Delete", "DeleteAddress", new { addressNo = item.AddressNo }, new { @class = "deleteLink", @pkNo = item.AddressNo })
+        </td>
+        <td>            
+            <span class="AddressNo">@item.AddressNo</span>
+        </td>       
+        <td>            
+            <span class="AddressTypeName">@item.AddressTypeName</span>
+        </td>
+        <td>            
+            <span class="CityName">@item.CityName/@item.CountryName</span>
+        </td>
+        <td>            
+            <span class="AddressText">@item.AddressText</span>
+        </td>       
+    </tr>
+}
+
+</table>
+
+
