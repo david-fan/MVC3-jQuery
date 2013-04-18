@@ -6,7 +6,7 @@ namespace AddressBook_mvc3_jQuery
 	{
 		public PlanBaseInfo BaseInfo;
 		public IMubiao[] Targets;
-		public IXuexiFenggeFenxi[] Characters;
+		public IFenxi[] Characters;
 		public IDian[] Points;
 		public Plan ()
 		{

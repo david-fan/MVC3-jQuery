@@ -2,9 +2,9 @@ using System;
 
 namespace AddressBook_mvc3_jQuery
 {
-	public interface IXuexiFenggeFenxi
+	public interface IFenxi
 	{
-		public IXuexiFenggeFenxi ()
+		public IFenxi ()
 		{
 		}
 	}
