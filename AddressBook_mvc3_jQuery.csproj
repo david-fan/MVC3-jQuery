@@ -79,6 +79,9 @@
     <Reference Include="MongoDB.Driver">
       <HintPath>libs\MongoDB.Driver.dll</HintPath>
     </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>libs\mysql.data.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
@@ -103,8 +106,6 @@
     <Compile Include="Models\Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Data\MonoDBDriver.cs" />
-    <Compile Include="Models\plan\PlanBaseInfo.cs" />
-    <Compile Include="Models\plan\Plan.cs" />
     <Compile Include="Models\plan\Mubiao\GuochengFangfa.cs" />
     <Compile Include="Models\plan\Mubiao\ZhishiJineng.cs" />
     <Compile Include="Models\plan\Mubiao\QingganTaidu.cs" />
@@ -116,6 +117,16 @@
     <Compile Include="Models\plan\Fengge\YibanTezheng.cs" />
     <Compile Include="Models\plan\Fengge\NengliCeyan.cs" />
     <Compile Include="Models\plan\Fengge\NengliFenxi.cs" />
+    <Compile Include="Models\plan\Zhunbei\IZhunbei.cs" />
+    <Compile Include="Models\plan\Zhunbei\JiaoshiZhunbei.cs" />
+    <Compile Include="Models\plan\Zhunbei\XueshengZhunbei.cs" />
+    <Compile Include="Models\plan\Huodong\IHuodong.cs" />
+    <Compile Include="Models\plan\Huodong\Huodong.cs" />
+    <Compile Include="Models\plan\JiaoxueFangan.cs" />
+    <Compile Include="Models\plan\JibenXinxi.cs" />
+    <Compile Include="Models\plan\JiaoxueFansi.cs" />
+    <Compile Include="Models\plan\JiaoxuePingjia.cs" />
+    <Compile Include="Data\MySqlDBDriver.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\images\delpiero.jpg" />
@@ -195,6 +206,8 @@
     <Folder Include="Models\plan\Mubiao\" />
     <Folder Include="Models\plan\Dian\" />
     <Folder Include="Models\plan\Fengge\" />
+    <Folder Include="Models\plan\Zhunbei\" />
+    <Folder Include="Models\plan\Huodong\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

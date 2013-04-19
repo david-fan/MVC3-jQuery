@@ -2,7 +2,7 @@ using System;
 
 namespace AddressBook_mvc3_jQuery
 {
-	public class PlanBaseInfo
+	public class JibenXinxi
 	{
 		public string Subject;
 		public string Grade;
@@ -11,7 +11,7 @@ namespace AddressBook_mvc3_jQuery
 		public string Author;
 		public string Organization;
 
-		public PlanBaseInfo ()
+		public JibenXinxi ()
 		{
 		}
 	}
