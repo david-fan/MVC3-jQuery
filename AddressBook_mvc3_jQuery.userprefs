@@ -1,20 +1,17 @@
 ﻿<Properties GitUserInfo="UsingGIT">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Models/plan/Dian/IDian.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Data/MySqlDBDriver.cs">
     <Files>
-      <File FileName="Models/plan/PlanBaseInfo.cs" Line="5" Column="14" />
-      <File FileName="Models/plan/Plan.cs" Line="10" Column="24" />
-      <File FileName="Models/plan/Mubiao/GuochengFangfa.cs" Line="1" Column="1" />
-      <File FileName="Models/plan/Mubiao/IMubiao.cs" Line="5" Column="26" />
-      <File FileName="Models/plan/Mubiao/QingganTaidu.cs" Line="1" Column="1" />
-      <File FileName="Models/plan/Mubiao/ZhishiJineng.cs" Line="1" Column="1" />
-      <File FileName="Models/plan/Dian/IDian.cs" Line="10" Column="4" />
-      <File FileName="Models/plan/Dian/Nandian.cs" Line="1" Column="1" />
-      <File FileName="Models/plan/Dian/Zhongdian.cs" Line="1" Column="1" />
-      <File FileName="Models/plan/Fengge/YibanTezheng.cs" Line="5" Column="27" />
-      <File FileName="Models/plan/Fengge/NengliFenxi.cs" Line="5" Column="26" />
-      <File FileName="Models/plan/Fengge/NengliCeyan.cs" Line="5" Column="26" />
-      <File FileName="Models/plan/Fengge/IFenxi.cs" Line="5" Column="25" />
+      <File FileName="Models/plan/JiaoxueFangan.cs" Line="19" Column="1" />
+      <File FileName="Models/plan/Zhunbei/IZhunbei.cs" Line="1" Column="1" />
+      <File FileName="Models/plan/Zhunbei/JiaoshiZhunbei.cs" Line="5" Column="40" />
+      <File FileName="Models/plan/Zhunbei/XueshengZhunbei.cs" Line="5" Column="41" />
+      <File FileName="Models/plan/Huodong/IHuodong.cs" Line="1" Column="1" />
+      <File FileName="Models/plan/Huodong/Huodong.cs" Line="5" Column="33" />
+      <File FileName="Models/plan/JibenXinxi.cs" Line="5" Column="25" />
+      <File FileName="Models/plan/JiaoxueFansi.cs" Line="1" Column="1" />
+      <File FileName="Models/plan/JiaoxuePingjia.cs" Line="1" Column="1" />
+      <File FileName="Data/MySqlDBDriver.cs" Line="27" Column="16" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
