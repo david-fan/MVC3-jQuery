@@ -122,10 +122,6 @@ namespace AddressBook_mvc3_jQuery
                 new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
             );
             //--------------
-
-        
-
-
         }
 
         protected void Application_Start()

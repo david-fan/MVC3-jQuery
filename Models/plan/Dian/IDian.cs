@@ -4,9 +4,8 @@ namespace AddressBook_mvc3_jQuery
 {
 	public interface IDian
 	{
-		int Type{
+		DianType Type{
 			get;
-			set;
 		}
 	}
 }

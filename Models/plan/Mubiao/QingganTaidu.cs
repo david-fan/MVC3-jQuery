@@ -7,6 +7,12 @@ namespace AddressBook_mvc3_jQuery
 		public QingganTaidu ()
 		{
 		}
+
+		public MubiaoType Type{
+			get{
+				return MubiaoType.QingganTaidu;
+			}
+		}
 	}
 }
 

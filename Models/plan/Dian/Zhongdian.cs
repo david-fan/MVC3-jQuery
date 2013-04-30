@@ -7,6 +7,11 @@ namespace AddressBook_mvc3_jQuery
 		public Zhongdian ()
 		{
 		}
+		public DianType Type{
+			get{
+				return DianType.Zhongdian;
+			}
+		}
 	}
 }
 

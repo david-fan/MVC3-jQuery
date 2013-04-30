@@ -7,6 +7,14 @@ namespace AddressBook_mvc3_jQuery
 		public GuochengFangfa ()
 		{
 		}
+
+		public MubiaoType Type{
+			get{
+				return MubiaoType.GuochengFangfa;
+			}
+		}
+
+
 	}
 }
 

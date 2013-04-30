@@ -127,6 +127,9 @@
     <Compile Include="Models\plan\JiaoxueFansi.cs" />
     <Compile Include="Models\plan\JiaoxuePingjia.cs" />
     <Compile Include="Data\MySqlDBDriver.cs" />
+    <Compile Include="Models\plan\Mubiao\MubiaoType.cs" />
+    <Compile Include="Models\plan\Dian\DianType.cs" />
+    <Compile Include="Controllers\PlanController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\images\delpiero.jpg" />
@@ -208,6 +211,7 @@
     <Folder Include="Models\plan\Fengge\" />
     <Folder Include="Models\plan\Zhunbei\" />
     <Folder Include="Models\plan\Huodong\" />
+    <Folder Include="Views\Plan\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -284,4 +288,7 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
+  <ItemGroup>
+    <None Include="Views\Plan\Index.cshtml" />
+  </ItemGroup>
 </Project>

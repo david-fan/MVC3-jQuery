@@ -7,6 +7,11 @@ namespace AddressBook_mvc3_jQuery
 		public ZhishiJineng ()
 		{
 		}
+		public MubiaoType Type{
+			get{
+				return MubiaoType.ZhishiJineng;
+			}
+		}
 	}
 }
 
