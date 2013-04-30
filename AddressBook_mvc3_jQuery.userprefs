@@ -1,16 +1,20 @@
 ﻿<Properties GitUserInfo="UsingGIT">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Views/Address/Index.cshtml">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/AccountController.cs">
     <Files>
       <File FileName="Views/Person/PersonList.cshtml" Line="1" Column="1" />
       <File FileName="Controllers/PersonController.cs" Line="1" Column="1" />
       <File FileName="Global.asax" Line="1" Column="1" />
-      <File FileName="Global.asax.cs" Line="8" Column="1" />
+      <File FileName="Global.asax.cs" Line="1" Column="1" />
       <File FileName="Views/_ViewStart.cshtml" Line="1" Column="1" />
-      <File FileName="Views/Person/SavePersonPic.cshtml" Line="8" Column="25" />
-      <File FileName="Views/Person/Save.cshtml" Line="47" Column="55" />
-      <File FileName="Views/Address/AddressList.cshtml" Line="1" Column="1" />
+      <File FileName="Views/Person/SavePersonPic.cshtml" Line="1" Column="1" />
+      <File FileName="Views/Person/Save.cshtml" Line="1" Column="1" />
+      <File FileName="Controllers/PlanController.cs" Line="12" Column="29" />
+      <File FileName="Views/Plan/Index.cshtml" Line="9" Column="1" />
+      <File FileName="Views/Home/Index.cshtml" Line="1" Column="1" />
+      <File FileName="Views/Common/_personinfo.cshtml" Line="11" Column="37" />
       <File FileName="Views/Address/Index.cshtml" Line="1" Column="1" />
+      <File FileName="Controllers/AccountController.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
